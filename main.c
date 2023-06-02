@@ -24,7 +24,7 @@ int main(int argc, char **argv)
 			str = enc(argv[2]);
 			break;
 		case 'd':
-			str = dec(argv[1]);
+			str = dec(argv[2]);
 			break;
 		default:
 			printf("usage: %s [flag] [txt]\n", argv[0]);

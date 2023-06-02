@@ -13,6 +13,9 @@ char *enc(char *str)
 	char min = ' ', max = '~';
 	int i, seed = (time(0) % (max - min)) + min;
 
+	if (str == NULL)
+		return (NULL);
+
 	srand(seed);
 
 	encstr = malloc(sizeof(char *) * (strlen(str) + 2));
@@ -21,7 +24,7 @@ char *enc(char *str)
 
 	encstr[0] = seed;
 	for (i = 0; str[i] != 0; i++)
-		encstr[i + 1] = ((str[i] + rand()) % (max - min)) + min;
+		encstr[i + 1] = (((str[i] - min) + rand()) % (max - min)) + min;
 
 	return (encstr);
 }
@@ -39,6 +42,9 @@ char *dec(char *str)
 	char min = ' ', max = '~';
 	int i, seed = str[0];
 
+	if (str == NULL)
+		return (NULL);
+
 	srand(seed);
 
 	decstr = malloc(sizeof(char *) * strlen(str));
@@ -46,8 +52,26 @@ char *dec(char *str)
 		return (NULL);
 
 	for (i = 0; str[i + 1] != 0; i++)
-		decstr[i] = ((str[i + 1] - rand()) % (max - min)) - min + (max - min);
+		decstr[i] = modulo(((str[i + 1] - min) - rand()), (max - min)) + min;
 
 	return (decstr);
+}
+
+/**
+ * modulo - handles the modulo
+ * @dividend: devided number
+ * @divisor: deviding number
+ *
+ * Return: reminder of division
+ */
+
+int modulo(int dividend, int divisor)
+{
+	int r = dividend % divisor;
+
+	if (r < 0)
+		r = (r + divisor) % divisor;
+
+	return (r);
 }
 
