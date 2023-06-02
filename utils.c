@@ -10,7 +10,7 @@
 char *enc(char *str)
 {
 	char *encstr;
-	char min = ' ', max = '~';
+	char min = ' ', max = '~' + 1;
 	int i, seed = (time(0) % (max - min)) + min;
 
 	if (str == NULL)
@@ -24,7 +24,10 @@ char *enc(char *str)
 
 	encstr[0] = seed;
 	for (i = 0; str[i] != 0; i++)
-		encstr[i + 1] = (((str[i] - min) + rand()) % (max - min)) + min;
+		if (str[i] >= min && str[i] < max)
+			encstr[i + 1] = (((str[i] - min) + rand()) % (max - min)) + min;
+		else
+			encstr[i + 1] = str[i];
 
 	return (encstr);
 }
@@ -39,7 +42,7 @@ char *enc(char *str)
 char *dec(char *str)
 {
 	char *decstr;
-	char min = ' ', max = '~';
+	char min = ' ', max = '~' + 1;
 	int i, seed = str[0];
 
 	if (str == NULL)
@@ -52,7 +55,10 @@ char *dec(char *str)
 		return (NULL);
 
 	for (i = 0; str[i + 1] != 0; i++)
-		decstr[i] = modulo(((str[i + 1] - min) - rand()), (max - min)) + min;
+		if (str[i + 1] >= min && str[i + 1] < max)
+			decstr[i] = modulo(((str[i + 1] - min) - rand()), (max - min)) + min;
+		else
+			decstr[i] = str[i + 1];
 
 	return (decstr);
 }
